@@ -1,21 +1,38 @@
 package medium;
 
+import java.util.*;
+
 public class RemoveDuplicateLetters {
 	
 	public String removeDuplicateLetters(String s) {
 		int[] arr = new int[26];
+		boolean[] visited = new boolean[26];
+		Stack<Character> st = new Stack<>();
+		
 		for(int i=0; i<s.length(); i++) {
-			int curr = s.charAt(i)-97;
-			if(arr[curr] == 0) {
-				arr[curr] = 1;
-			}
+			arr[s.charAt(i)-'a']++;
 		}
-		String ans = "";
-		for(int i=0; i<arr.length; i++) {
-			if(arr[i] != 0) {
-				ans+=(char)(i+97);
+		
+		for(int i=0; i<s.length(); i++) {
+			char curr = s.charAt(i);
+			arr[curr-'a']--;
+			if(visited[curr-'a']) {
+				continue;
 			}
+			while(!st.isEmpty() && curr < st.peek() && arr[st.peek()-'a']>0) {
+				visited[st.pop()-'a'] = false;
+			}
+			st.add(curr);
+			visited[curr-'a'] = true;
 		}
-		return ans;
+		
+		
+		StringBuilder ans = new StringBuilder();
+		
+		while(!st.isEmpty()) {
+			ans.insert(0, st.pop());
+		}
+		
+		return ans.toString();
 	}
 }
